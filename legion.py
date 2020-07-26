@@ -46,4 +46,4 @@ async def on_member_join(member):
 # Message on stream finished
 
 # Legion Bot token environment variable
-    
+client.run(LEGION_TOKEN)
