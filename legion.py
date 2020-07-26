@@ -36,8 +36,10 @@ async def on_member_join(member):
     member.send('Willkommen auf unserem Server! Um zu sehen, wozu diese Entität fähig ist, schreibe "!commands" in einen der Chaträume.')
     member.send('Welcome to our Server! If you want to see what this entity is capable of, type "!commands" in the main chatroom.')
     #Add role imp to joined users
-    #role = get roles 
-    #member.add_roles(role)
+    role_id = '737043178775117955'
+    #role_id = '694872569073107114' # Role-id on HaP-Server
+    role = discord.Guild.get_role(role_id)
+    member.add_roles(role)
 
 # Twitch API functions:
 # Message on stream goes live
