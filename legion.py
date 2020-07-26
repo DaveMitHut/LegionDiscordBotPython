@@ -1,3 +1,4 @@
+import os
 import json
 import random
 import discord
@@ -83,4 +84,5 @@ async def on_member_join(member):
     # Message when stream goes live
     # Message when stream finished
 
-client.run(LEGION_TOKEN)
+token = os.environ.get('LEGION_TOKEN', 3)
+client.run(token)
