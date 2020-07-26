@@ -1,4 +1,2 @@
-json
-random
-discord
-requests
+discord.py==1.3.4
+requests==2.22.0
