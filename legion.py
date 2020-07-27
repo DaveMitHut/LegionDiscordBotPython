@@ -46,21 +46,35 @@ async def on_message(msg):
                     else:
                         req += '+' + card_name[i]
 
-                response = requests.get(req)
-                data = response.json()
 
-                if msg.content.startswith('!card') or msg.content.startswith('!cards'):
-                    await msg.channel.send(data['image_uris']['normal'])
+                try:
+                    response = requests.get(req)
+                    response.raise_for_status()
 
-                elif msg.content.startswith('!legality') or msg.content.startswith('legalities') or msg.content.startswith('legal'):
-                    await msg.channel.send('Commander: ' + data['legalities']['commander'] + '\nStandard: ' + data['legalities']['standard'] + '\nModern: ' + data['legalities']['modern'])
-        
-                elif msg.content.startswith('!rulings') or msg.content.startswith('ruling'):
-                    rulings_req = 'https://api.scryfall.com/cards/' + data['id'] + '/rulings'
-                    rulings_response = requests.get(rulings_req)
-                    rulings_data = rulings_response.json()
-                    for i in range(0, len(rulings_data['data'])):
-                        await msg.channel.send('\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment'])
+                except requests.exceptions.HTTPError as errh:
+                    print('HTTP Error: ', errh)
+                except requests.exceptions.ConnectionError as errc:
+                    print('Connection Error: ', errc)
+                except requests.exceptions.Timeout as errt:
+                    print('Timeout Error: ', errt)
+                except requests.exceptions.RequestException as err:
+                    print('Something went wrong: ', err)
+
+                else:
+                    data = response.json()
+
+                    if msg.content.startswith('!card') or msg.content.startswith('!cards'):
+                        await msg.channel.send(data['image_uris']['normal'])
+
+                    elif msg.content.startswith('!legality') or msg.content.startswith('legalities') or msg.content.startswith('legal'):
+                        await msg.channel.send('Commander: ' + data['legalities']['commander'] + '\nStandard: ' + data['legalities']['standard'] + '\nModern: ' + data['legalities']['modern'])
+            
+                    elif msg.content.startswith('!rulings') or msg.content.startswith('ruling'):
+                        rulings_req = 'https://api.scryfall.com/cards/' + data['id'] + '/rulings'
+                        rulings_response = requests.get(rulings_req)
+                        rulings_data = rulings_response.json()
+                        for i in range(0, len(rulings_data['data'])):
+                            await msg.channel.send('\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment'])
 
 @client.event
 async def on_member_join(member):
