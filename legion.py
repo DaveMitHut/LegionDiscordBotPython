@@ -6,12 +6,11 @@ import requests
 
 client = discord.Client()
 
-existing_commands = ['!commands', '!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling', '!roll', '!cassandra']
+existing_commands = ['!commands', '!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling', '!roll', '!cassandra'. '!play', '!quiet']
 mtg_commands = ['!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling']
 
 @client.event
 async def on_message(msg):
-    
     if msg.content.startswith('!') and not msg.content.startswith('!twitch'):
         message_content = msg.content.split(' ')
         if message_content[0] not in existing_commands:
@@ -37,7 +36,7 @@ async def on_message(msg):
                     await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
 
             # Call scryfall API for commands !ruling, !legality, !card
-            if message_content[0] in mtg_commands:
+            elif message_content[0] in mtg_commands:
                 card_name = msg.content.split(' ')
                 req = 'https://api.scryfall.com/cards/named?fuzzy='
 
@@ -77,6 +76,14 @@ async def on_message(msg):
                         for i in range(0, len(rulings_data['data'])):
                             await msg.channel.send('\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment'])
 
+            elif msg.content.startswith('!play'):
+                pass
+                # Default: play tavern music in channel 'Taverne'
+                # Other: play requested song in requested channel
+            elif msg.content.startswith('!quiet'):
+                pass
+                # Stop music playback in requested channel
+
 @client.event
 async def on_member_join(member):
     await member.send('Willkommen auf unserem Server! Um zu sehen, wozu diese Entität fähig ist, schreibe "!commands" in einen der Chaträume.')
@@ -91,13 +98,9 @@ async def on_member_join(member):
     except discord.NotFound:
         print('Role not found.')
 
-# Missings:
-# Scryfall API functions:
-    # Handle error codes
-
-# Twitch API functions:
-    # Message when stream goes live
-    # Message when stream finished
+@client.event
+async def on_ready():
+    print(client.user.name)
 
 token = os.environ.get('LEGION_TOKEN', 3)
 client.run(token)
