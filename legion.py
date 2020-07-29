@@ -6,7 +6,7 @@ import requests
 
 client = discord.Client()
 
-existing_commands = ['!commands', '!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling', '!roll', '!cassandra'. '!play', '!quiet']
+existing_commands = ['!commands', '!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling', '!roll', '!cassandra', '!play', '!quiet']
 mtg_commands = ['!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling']
 
 @client.event
