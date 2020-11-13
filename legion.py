@@ -18,7 +18,7 @@ async def on_message(msg):
         elif message_content[0] in existing_commands:
             # Display list of commands
             if msg.content.startswith('!commands'):
-                await msg.channel.send('Here is a list of commands you can use:\n!card cardname -> displays card for a given cardname\n!legality cardname -> displays a cards legalities for Commander, Standard & Modern formats\n!rulings cardname -> displays existing rulings for a card\n!roll xdx -> rolls the specified number of dice')
+                await msg.channel.send('Here is a list of commands you can use:\n!card cardname -> displays card for a given cardname\n!legality cardname -> displays a cards legalities for Commander, Standard & Modern formats\n!rulings cardname -> displays existing rulings for a card\n!roll xdx+x -> rolls the specified number of dice with the given optional modifier')
 
             # Stream-specific commands
             elif msg.content.startswith('!cassandra'):
