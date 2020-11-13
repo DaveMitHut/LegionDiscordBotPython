@@ -29,6 +29,7 @@ async def on_message(msg):
                 message = msg.content
                 if '+' in message:
                     content = msg.content.split('+')
+                    await msg.channel.send(content)
                     modifier = content[1]
                     dice = content[0].split('d')
                     number_dice = int(dice[0])
