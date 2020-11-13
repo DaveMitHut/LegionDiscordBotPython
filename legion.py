@@ -26,26 +26,27 @@ async def on_message(msg):
             
             # Roll randomly generated specified dice
             elif msg.content.startswith('!roll'):
-                #if msg.content.contains('+'):
-                #    content = msg.content.split('+')
-                #    modifier = content[1]
-                #    dice = content[0].split('d')
-                #    number_dice = int(dice[0])
-                #    sides = int(dice[1])
-                #    await msg.channel.send('Rolling ' + content[0] + '+' + content[1])
-                #    for i in range(number_dice):
-                #        rand_roll = random.randrange(1, sides + 1) + modifier
-                #        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
+                message = msg.content
+                if message.contains('+'):
+                    content = msg.content.split('+')
+                    modifier = content[1]
+                    dice = content[0].split('d')
+                    number_dice = int(dice[0])
+                    sides = int(dice[1])
+                    await msg.channel.send('Rolling ' + content[0] + '+' + content[1])
+                    for i in range(number_dice):
+                        rand_roll = random.randrange(1, sides + 1) + modifier
+                        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
                     
-                #else:
-                content = msg.content.split(' ')
-                dice = content[1].split('d')
-                number_dice = int(dice[0])
-                sides = int(dice[1])
-                await msg.channel.send('Rolling ' + content[1])
-                for i in range(number_dice):
-                    rand_roll = random.randrange(1, sides + 1)
-                    await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
+                else:
+                    content = msg.content.split(' ')
+                    dice = content[1].split('d')
+                    number_dice = int(dice[0])
+                    sides = int(dice[1])
+                    await msg.channel.send('Rolling ' + content[1])
+                    for i in range(number_dice):
+                        rand_roll = random.randrange(1, sides + 1)
+                        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
 
             # Call scryfall API for commands !ruling, !legality, !card
             elif message_content[0] in mtg_commands:
