@@ -36,7 +36,7 @@ async def on_message(msg):
                     sides = int(dice[1])
                     await msg.channel.send('Rolling ' + content[1] + '+' + modifier)
                     for i in range(number_dice):
-                        rand_roll = random.randrange(1, sides + 1) + modifier
+                        rand_roll = random.randint(1, sides + 1) + int(modifier)
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
                     
                 else:
@@ -46,7 +46,7 @@ async def on_message(msg):
                     sides = int(dice[1])
                     await msg.channel.send('Rolling ' + content[1])
                     for i in range(number_dice):
-                        rand_roll = random.randrange(1, sides + 1)
+                        rand_roll = random.randint(1, sides + 1)
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
 
             # Call scryfall API for commands !ruling, !legality, !card
