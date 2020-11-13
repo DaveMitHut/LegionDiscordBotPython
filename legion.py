@@ -28,13 +28,13 @@ async def on_message(msg):
             elif msg.content.startswith('!roll'):
                 message = msg.content
                 if '+' in message:
-                    content = msg.content.split('+')
-                    await msg.channel.send(content)
-                    modifier = content[1]
-                    dice = content[0].split('d')
+                    full_message = msg.content.split('+')
+                    modifier = full_message[1]
+                    content = full_message[0].split(' ')
+                    dice = content[1].split('d')
                     number_dice = int(dice[0])
                     sides = int(dice[1])
-                    await msg.channel.send('Rolling ' + content[0] + '+' + content[1])
+                    await msg.channel.send('Rolling ' + content[1] + '+' + modifier)
                     for i in range(number_dice):
                         rand_roll = random.randrange(1, sides + 1) + modifier
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
