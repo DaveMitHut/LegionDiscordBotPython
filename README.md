@@ -19,7 +19,7 @@ functions are described in the following table:
 **Name** | **Additional Aliases** | **Function**
 ---- | ----- | --------
 **!commands** | !command | display all available commands
-**!roll xdx** |  | roll the specified number of a specified dice
+**!roll xdx+x** |  | roll the specified number of a specified dice with an optional modifier
 **!card cardname** | !cards | display an image for the specified card
 **!rulings cardname** | !ruling | display all available rulings for the specified card
 **!legality cardname** | !legalities, !legal | display the legality of the specified card for the standard, modern & commander formats
