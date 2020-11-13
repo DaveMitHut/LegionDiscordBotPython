@@ -27,6 +27,7 @@ async def on_message(msg):
             # Roll randomly generated specified dice
             elif msg.content.startswith('!roll'):
                 message = msg.content
+                msg.channel.send(message)
                 if message.contains('+'):
                     content = msg.content.split('+')
                     modifier = content[1]
