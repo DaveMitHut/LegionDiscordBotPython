@@ -49,6 +49,8 @@ async def on_message(msg):
                     await msg.channel.send('Rolling ' + content[1] + '-' + modifier)
                     for i in range(number_dice):
                         rand_roll = random.randint(1, sides) - int(modifier)
+                        if rand_roll < 1:
+                            rand_roll = 1
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
                     
                 else:
