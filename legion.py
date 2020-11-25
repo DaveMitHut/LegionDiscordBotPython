@@ -38,6 +38,8 @@ async def on_message(msg):
                     for i in range(number_dice):
                         rand_roll = random.randint(1, sides) + int(modifier)
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
+                        if (rand_roll - int(modifier)) == 20:
+                            await msg.channel.send('\nNat 20!')
                         
                 elif '-' in message:
                     full_message = msg.content.split('-')
@@ -52,6 +54,8 @@ async def on_message(msg):
                         if rand_roll < 1:
                             rand_roll = 1
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
+                        if (rand_roll + int(modifier)) == 20:
+                            await msg.channel.send('\nNat 20!')
                     
                 else:
                     content = msg.content.split(' ')
@@ -62,6 +66,8 @@ async def on_message(msg):
                     for i in range(number_dice):
                         rand_roll = random.randint(1, sides)
                         await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
+                        if rand_roll == 20:
+                            await msg.channel.send('\nNat 20!')
 
             # Call scryfall API for commands !ruling, !legality, !card
             elif message_content[0] in mtg_commands:
