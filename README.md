@@ -5,31 +5,28 @@
 I wrote this little discord bot for my own private server in april 2019.
 In April 2020 we moved this bot to the server for our streaming community
 "Helden Auf Papier". In July/August 2020 I rewrote the bot in Python and
-added additional functions for twitch integration and more.
+added additional functions for twitch integration and more. After another
+code review in may 2021, this bot got a major update concerning its code.
 
-The bot has basic functions related to *Magic: The Gathering*, *Dungeons
-& Dragons* and RPGs in general. It is named after the character 'Legion'
-from the Mass Effect games.
+The bot has basic functions related to *Magic: The Gathering*, *Dungeons & Dragons*
+and RPGs in general. It is named after the character 'Legion' from the Mass Effect
+game series.
 
 ### Functions
-This bot has some basic functions related to *Magic: The Gathering*, *Dungeons
-& Dragons* and other RPGs, like displaying cards and rulings or rolling dice. All
-functions are described in the following table:
+All functions are described in the following table:
 
-**Name** | **Additional Aliases** | **Function**
----- | ----- | --------
-**!commands** | !command | display all available commands
-**!roll xdx+x** or **!roll xdx-x** |  | roll the specified number of a specified dice with an optional modifier
-**!card cardname** | !cards | display an image for the specified card
-**!rulings cardname** | !ruling | display all available rulings for the specified card
-**!legality cardname** | !legalities, !legal | display the legality of the specified card for the standard, modern & commander formats
+**Name** | **Function**
+---- | --------
+**!help** | display all available commands
+**!roll xdx+x** or **!roll xdx-x** | roll the specified number of a dice with an optional +/- modifier
+**!card cardname** | display the image of the requested card
+**!rulings cardname** | display all available rulings for the requested card and their source
+**!legality cardname** | display the legality of the requested card for the standard, modern & commander formats
 
 ### Additional functions
 In addition to the specified functions above, this bot will also greet all new
-server members with a specific message and information on how to view all available
-commands. Furthermore, the bot will grant specific permissions to every new member of
-the server. If you type an invalid command, the bot will notify you and instruct you
-how to view all valid commands.
+server members. Furthermore, the bot will grant a specific role to every new member of
+the server.
 
 ### Disclaimer
 The literal and graphical information presented by this bot about Magic: The Gathering,

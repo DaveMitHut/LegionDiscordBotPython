@@ -1,140 +1,113 @@
+# legion.py
 import os
-import json
-import random
 import discord
+import json
+import re
+import random
 import requests
+from discord.ext import commands
+#from dotenv import load_dotenv
 
-client = discord.Client()
+#Load Token from local file (ONLY FOR DEVELOPMENT)
+#load_dotenv()
+#TOKEN = os.getenv('DISCORD_TOKEN')
 
-existing_commands = ['!commands', '!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling', '!roll', '!cassandra', '!play', '!quiet']
-mtg_commands = ['!card', '!cards', '!legality', '!legalities', '!legal', '!rulings', '!ruling']
+bot = commands.Bot(command_prefix='!')
 
-@client.event
-async def on_message(msg):
-    if msg.content.startswith('!') and not msg.content.startswith('!twitch'):
-        message_content = msg.content.split(' ')
-        if message_content[0] not in existing_commands:
-            await msg.channel.send('Looks like you have a typo in your command.\nType !commands to get a list of all available commands.')
-        elif message_content[0] in existing_commands:
-            # Display list of commands
-            if msg.content.startswith('!commands'):
-                await msg.channel.send('Here is a list of commands you can use:\n!card cardname -> displays card for a given cardname\n!legality cardname -> displays a cards legalities for Commander, Standard & Modern formats\n!rulings cardname -> displays existing rulings for a card\n!roll xdx+/-x -> rolls the specified number of dice with the given optional modifier')
+@bot.command(name='cassandra', help='Stream-specific command concerning a characters untimely death')
+async def cassandra(ctx):
+    await ctx.send('In der Session vom 15.04.2020 wurde Cassandra, @davemithut\'s erster Spielercharakter in der "Descent Into Avernus" Kampagne, durch eine herabfallende Decke erschlagen (weil Simon eins seiner Features vergessen hat).')
 
-            # Stream-specific commands
-            elif msg.content.startswith('!cassandra'):
-                await msg.channel.send('In der Session vom 15.04.2020 wurde Cassandra, @davemithut erster Spielercharakter in dieser Kampagne, durch eine herabfallende Decke erschlagen (weil Simon sein Feature vergessen hat).')
-            
-            # Roll randomly generated specified dice
-            elif msg.content.startswith('!roll'):
-                message = msg.content
-                if '+' in message:
-                    full_message = msg.content.split('+')
-                    modifier = full_message[1]
-                    content = full_message[0].split(' ')
-                    dice = content[1].split('d')
-                    number_dice = int(dice[0])
-                    sides = int(dice[1])
-                    await msg.channel.send('Rolling ' + content[1] + '+' + modifier)
-                    for i in range(number_dice):
-                        rand_roll = random.randint(1, sides) + int(modifier)
-                        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
-                        if (rand_roll - int(modifier)) == 20:
-                            await msg.channel.send('\nNat 20!')
-                        
-                elif '-' in message:
-                    full_message = msg.content.split('-')
-                    modifier = full_message[1]
-                    content = full_message[0].split(' ')
-                    dice = content[1].split('d')
-                    number_dice = int(dice[0])
-                    sides = int(dice[1])
-                    await msg.channel.send('Rolling ' + content[1] + '-' + modifier)
-                    for i in range(number_dice):
-                        rand_roll = random.randint(1, sides) - int(modifier)
-                        if rand_roll < 1:
-                            rand_roll = 1
-                        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
-                        if (rand_roll + int(modifier)) == 20:
-                            await msg.channel.send('\nNat 20!')
-                    
-                else:
-                    content = msg.content.split(' ')
-                    dice = content[1].split('d')
-                    number_dice = int(dice[0])
-                    sides = int(dice[1])
-                    await msg.channel.send('Rolling ' + content[1])
-                    for i in range(number_dice):
-                        rand_roll = random.randint(1, sides)
-                        await msg.channel.send('\nRoll ' + str(i + 1) + ': ' + str(rand_roll))
-                        if rand_roll == 20:
-                            await msg.channel.send('\nNat 20!')
+@bot.command(name='roll', help='Roll any number of n-sided dice with a + or - modifier')
+async def roll(ctx, dice:str):
+    dice = dice.split('d')
+    number_dice = int(dice[0])
+    if ('+' in dice[1]):
+        sides_mod = dice[1].split('+')
+        sides = int(sides_mod[0])
+        mod = int(sides_mod[1])
+        dicerolls = [
+            str(random.choice(range(1 + mod, sides + mod + 1)))
+            for _ in range(number_dice)
+        ]
+        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '+' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls)) 
+    elif ('-' in dice[1]):
+        sides_mod = dice[1].split('-')
+        sides = int(sides_mod[0])
+        mod = int(sides_mod[1])
+        dicerolls = [
+            str(random.choice(range(1 - mod, sides - mod + 1)))
+            for _ in range(number_dice)
+        ]
+        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '-' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls))
+    else:
+        sides = int(dice[1])
+        dicerolls = [
+            str(random.choice(range(1, sides + 1)))
+            for _ in range(number_dice)
+        ]
+        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + '\n'.join(dicerolls))
 
-            # Call scryfall API for commands !ruling, !legality, !card
-            elif message_content[0] in mtg_commands:
-                card_name = msg.content.split(' ')
-                req = 'https://api.scryfall.com/cards/named?fuzzy='
+@bot.command(name='card', help='Fetch any MtG card\'s image')
+async def card_image(ctx, cardname: str):
+    data = fetchCardFromScryfall(cardname)
+    await ctx.send(data['image_uris']['normal'])
 
-                for i in range(1, len(card_name)):
-                    if i == 1:
-                        req += card_name[i]
-                    else:
-                        req += '+' + card_name[i]
+@bot.command(name='legality', help='Fetch format legality for any MtG card')
+async def card_legality(ctx, cardname: str):
+    data = fetchCardFromScryfall(cardname)
+    await ctx.send('Commander: ' + data['legalities']['commander'] + '\nStandard: ' + data['legalities']['standard'] + '\nModern: ' + data['legalities']['modern'])
 
+@bot.command(name='rulings', help='Fetch rulings for any MtG card')
+async def card_legality(ctx, cardname: str):
+    data = fetchCardFromScryfall(cardname)
+    rulings_request_url = 'https://api.scryfall.com/cards/' + data['id'] + '/rulings'
+    rulings_response = requests.get(rulings_request_url)
+    rulings_data = rulings_response.json()
+    response = ''
+    for i in range(0, len(rulings_data['data'])):
+        response += '\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment']
+    await ctx.send(response)
 
-                try:
-                    response = requests.get(req)
-                    response.raise_for_status()
-
-                except requests.exceptions.HTTPError as errh:
-                    print('HTTP Error: ', errh)
-                except requests.exceptions.ConnectionError as errc:
-                    print('Connection Error: ', errc)
-                except requests.exceptions.Timeout as errt:
-                    print('Timeout Error: ', errt)
-                except requests.exceptions.RequestException as err:
-                    print('Something went wrong: ', err)
-
-                else:
-                    data = response.json()
-
-                    if msg.content.startswith('!card') or msg.content.startswith('!cards'):
-                        await msg.channel.send(data['image_uris']['normal'])
-
-                    elif msg.content.startswith('!legality') or msg.content.startswith('legalities') or msg.content.startswith('legal'):
-                        await msg.channel.send('Commander: ' + data['legalities']['commander'] + '\nStandard: ' + data['legalities']['standard'] + '\nModern: ' + data['legalities']['modern'])
-            
-                    elif msg.content.startswith('!rulings') or msg.content.startswith('ruling'):
-                        rulings_req = 'https://api.scryfall.com/cards/' + data['id'] + '/rulings'
-                        rulings_response = requests.get(rulings_req)
-                        rulings_data = rulings_response.json()
-                        for i in range(0, len(rulings_data['data'])):
-                            await msg.channel.send('\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment'])
-
-            elif msg.content.startswith('!play'):
-                pass
-                # Default: play tavern music in channel 'Taverne'
-                # Other: play requested song in requested channel
-            elif msg.content.startswith('!quiet'):
-                pass
-                # Stop music playback in requested channel
-
-@client.event
+@bot.event
 async def on_member_join(member):
-    await member.send('Willkommen auf unserem Server! Um zu sehen, wozu diese Entität fähig ist, schreibe "!commands" in einen der Chaträume.')
-    await member.send('Welcome to our Server! If you want to see what this entity is capable of, type "!commands" in the main chatroom.')
+    greeting = 'Hi ' + member.name + ', willkommen auf dem HeldenAufPapier Discord Server!\nHi ' + member.name + ', welcome to the HeldenAufPapier discord server!'
+    await member.send(greeting)
     try:
         #Add role 'imp' to newly joined users
         role_id = '694872569073107114' # Role-id of role 'imp'
         role = member.guild.get_role(int(role_id))
         await member.add_roles(role)
     except discord.Forbidden:
-        print('Cannot add roles.')
+        printf('Cannot add role {role} to user {member.name}.')
     except discord.NotFound:
-        print('Role not found.')
+        printf('Role {role} not found.')
 
-@client.event
+@bot.event
 async def on_ready():
-    print(client.user.name)
+    print(f'{bot.user.name} has connected to Discord!')
 
-token = os.environ.get('LEGION_TOKEN', 3)
-client.run(token)
+def fetchCardFromScryfall(cardname: str):
+    request_url = 'https://api.scryfall.com/cards/named?fuzzy='
+    cardname = cardname.split(' ')
+    for i in range(0, len(cardname)):
+        if i == 0:
+            request_url += cardname[i]
+        else:
+            request_url += '+' + cardname[i]
+    try:
+        response = requests.get(request_url)
+        response.raise_for_status()
+        return response.json()
+
+    except requests.exceptions.HTTPError as errh:
+        print('HTTP Error: ', errh)
+    except requests.exceptions.ConnectionError as errc:
+        print('Connection Error: ', errc)
+    except requests.exceptions.Timeout as errt:
+        print('Timeout Error: ', errt)
+    except requests.exceptions.RequestException as err:
+        print('Something went wrong: ', err)
+
+TOKEN = os.environ.get('LEGION_TOKEN', 3)
+#bot.run(TOKEN)
