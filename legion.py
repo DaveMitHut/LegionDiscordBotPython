@@ -11,6 +11,7 @@ from discord.ext import commands
 #Load Token from local file (ONLY FOR DEVELOPMENT)
 #load_dotenv()
 #TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.environ.get('LEGION_TOKEN', 3)
 
 bot = commands.Bot(command_prefix='!')
 
@@ -109,5 +110,4 @@ def fetchCardFromScryfall(cardname: str):
     except requests.exceptions.RequestException as err:
         print('Something went wrong: ', err)
 
-TOKEN = os.environ.get('LEGION_TOKEN', 3)
-#bot.run(TOKEN)
+bot.run(TOKEN)
