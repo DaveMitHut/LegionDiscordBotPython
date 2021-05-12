@@ -72,10 +72,13 @@ async def card_legality(ctx, cardname: str):
 
 @bot.event
 async def on_member_join(member):
-    greeting = 'Hi ' + member.name + ', willkommen auf dem HeldenAufPapier Discord Server!\nHi ' + member.name + ', welcome to the HeldenAufPapier discord server!'
-    await member.send(greeting)
+    greeting = 'Hi ' + member.name + ', willkommen auf dem ' + member.guild.name + ' Discord Server!\nHi ' + member.name + ', welcome to the ' + member.guild.name + ' discord server!'
+    if guild.system_channel is not None:
+        await guild.system_channel.send(greeting)
+    else:
+        await member.send(greeting)
     try:
-        #Add role 'imp' to newly joined users
+        #Add role 'imp' to newly joined users -- Only works on HeldenAufPapier Server
         role_id = '694872569073107114' # Role-id of role 'imp'
         role = member.guild.get_role(int(role_id))
         await member.add_roles(role)
