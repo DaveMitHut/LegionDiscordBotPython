@@ -31,7 +31,7 @@ async def roll(ctx, dice:str):
             str(random.choice(range(1 + mod, sides + mod + 1)))
             for _ in range(number_dice)
         ]
-        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '+' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls)) 
+        await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '+' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls)) 
     elif ('-' in dice[1]):
         sides_mod = dice[1].split('-')
         sides = int(sides_mod[0])
@@ -40,14 +40,14 @@ async def roll(ctx, dice:str):
             str(random.choice(range(1 - mod, sides - mod + 1)))
             for _ in range(number_dice)
         ]
-        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '-' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls))
+        await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '-' + str(mod) + '. Your results:\n' + '\n'.join(dicerolls))
     else:
         sides = int(dice[1])
         dicerolls = [
             str(random.choice(range(1, sides + 1)))
             for _ in range(number_dice)
         ]
-        await ctx.send('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + '\n'.join(dicerolls))
+        await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + '\n'.join(dicerolls))
 
 @bot.command(name='card', help='Fetch any MtG card\'s image')
 async def card_image(ctx, cardname: str):
