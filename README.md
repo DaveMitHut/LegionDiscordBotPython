@@ -12,16 +12,24 @@ The bot has basic functions related to *Magic: The Gathering*, *Dungeons & Drago
 and RPGs in general. It is named after the character 'Legion' from the Mass Effect
 game series.
 
-### Functions
-All functions are described in the following table:
+### Commands
+All commands are described in the following table:
 
-**Name** | **Function**
----- | --------
+**Name** | **Description**
+---- | ----
 **!help** | display all available commands
+**!coinflip** | flip a coin
 **!roll xdx+x** or **!roll xdx-x** | roll the specified number of a dice with an optional +/- modifier
 **!card cardname** | display the image of the requested card
 **!rulings cardname** | display all available rulings for the requested card and their source
 **!legality cardname** | display the legality of the requested card for the standard, modern & commander formats
+
+### Community-specific commands
+All community-specific commands and their respective communities are described in the following table:
+
+**Name** | **Description** | **Community**
+---- | ---- | ----
+**!cassandra** | story-specific command | HeldenAufPapier
 
 ### Additional functions
 In addition to the specified functions above, this bot will also greet all new
