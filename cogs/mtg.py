@@ -26,7 +26,7 @@ class MtG(commands.Cog):
         rulings_data = rulings_response.json()
         response = ''
         for i in range(0, len(rulings_data['data'])):
-            response += '\n' + 'From: ' + rulings_data['data'][i]['source'] + '\n' + rulings_data['data'][i]['comment']
+            response += '\n' + '**From: ' + rulings_data['data'][i]['source'] + '**\n' + rulings_data['data'][i]['comment']
         await ctx.send(response)
 
 ##### General methods to be used by commands #####
