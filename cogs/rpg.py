@@ -55,10 +55,12 @@ class RPG(commands.Cog):
         if '-dl' in args:
             rolls = [[random.choice(range(1, 7)) for _ in range(4)] for _ in range(6)]
             for sublist in rolls:
-                sublist.remove(min(sublist))
+                to_remove = min(sublist)
+                sublist.remove(to_remove)
+                sublist.append(to_remove)
             result_string = f"Your stat-rolls are:\n"
             for i in range(len(rolls)):
-                result_string += f"{str(i+1)}. [{', '.join([str(n) for n in rolls[i]])}] = {str(sum(rolls[i]))}\n"
+                result_string += f"{str(i+1)}. ({', '.join([str(n) for n in rolls[i][:3]])} | {str(rolls[i][3])}) = {str(sum(rolls[i]))}\n"
             await ctx.reply(result_string)
             return
         if '-og' in args:
