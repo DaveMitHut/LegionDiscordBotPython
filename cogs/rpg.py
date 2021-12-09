@@ -37,7 +37,6 @@ class RPG(commands.Cog):
                 for _ in range(number_dice)
             ]
             await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + '\n'.join(dicerolls))
-        await ctx.reply('Something went wrong!')
 
     @commands.command(name='total', help='Sum up any number of n-sided dice rolls.')
     async def total(self,ctx,dice:str):
