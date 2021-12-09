@@ -1,35 +1,6 @@
 from discord.ext import commands
 import random
 
-##### diceRoller - rollCommandParser #####
-
-def __rolls(sides, count):
-    return [random.choice(range(1, sides + 1)) for _ in range(0,count)]
-
-def __rollCommandParser(dice:str):
-    dice = dice.split('d')
-    sides = 0
-    count = 0
-    mod = 0
-    if len(dice) < 2 and dice[1] == '':
-        return None
-    try:
-        count = int(dice[0])
-    except:
-        return None
-        
-    if ('+' in dice[1]):
-        sides_mod = dice[1].split('+')
-        sides = int(sides_mod[0])
-        mod = int(sides_mod[1])
-        return sides,count,mod
-
-    if ('-' in dice[1]):
-        sides_mod = dice[1].split('+')
-        sides = int(sides_mod[0])
-        mod = int(sides_mod[1])*-1
-        return sides,count,mod
-
 class RPG(commands.Cog):
 
     def __init__(self, bot):
@@ -100,7 +71,6 @@ class RPG(commands.Cog):
             return
         # TODO : min 8 for reroll if a stat is 7 or lower
         # TODO : min X for reroll if a stat is X or lower
-
 
 def setup(bot):
     bot.add_cog(RPG(bot))
