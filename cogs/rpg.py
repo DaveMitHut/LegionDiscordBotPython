@@ -68,23 +68,38 @@ class RPG(commands.Cog):
             await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + '\n'.join(dicerolls))
         await ctx.reply('Something went wrong!')
 
-    @commands.command(name='total', help='Sum up any number of n-sided dice rolls with a + or - modifier')
+    @commands.command(name='total', help='Sum up any number of n-sided dice rolls.')
     async def total(self,ctx,dice:str):
-        await ctx.reply('TBD')
+        dice = dice.split('d')
+        number_dice = int(dice[0])
+        sides = int(dice[1])
+        dicerolls = [
+            random.choice(range(1, sides + 1))
+            for _ in range(number_dice)
+        ]
+        await ctx.reply('You rolled '  + str(number_dice) +'d' + str(sides) + '. Your results:\n' + str(sum(dicerolls)))
+
 
     @commands.command(name='rollstats', help='Rolls stats for Dungeons and Dragons characters. Try -dl or -og for different methods')
     async def rollstats(self,ctx,args:str):
-        stats = []
+        if '-dl' in args:
+            rolls = [[random.choice(range(1, 7)) for _ in range(4)] for _ in range(6)]
+            for sublist in rolls:
+                sublist.remove(min(sublist))
+            result_string = f"Your stat-rolls are:\n"
+            for i in range(len(rolls)):
+                result_string += f"{str(i+1)}. [{', '.join([str(n) for n in rolls[i]])}] = {str(sum(rolls[i]))}\n"
+            await ctx.reply(result_string)
+            return
         if '-og' in args:
-            for _ in range(0,6):
-                stats.append(str(sum(__rolls(6,3))))
-        else:
-            for _ in range(0,6):
-                tempstat = __rolls(6,4)
-                stats.append(str(sum(tempstat)-min(tempstat)))
+            rolls = [[random.choice(range(1, 7)) for _ in range(3)] for _ in range(6)]
+            result_string = f"Your stat-rolls are:\n"
+            for i in range(len(rolls)):
+                result_string += f"{str(i+1)}. [{', '.join([str(n) for n in rolls[i]])}] = {str(sum(rolls[i]))}\n"
+            await ctx.reply(result_string)
+            return
         # TODO : min 8 for reroll if a stat is 7 or lower
         # TODO : min X for reroll if a stat is X or lower
-
 
 
 def setup(bot):
