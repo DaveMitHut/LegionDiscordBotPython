@@ -20,6 +20,8 @@ All commands are described in the following table:
 **!help** | display all available commands
 **!coinflip** | flip a coin
 **!roll xdx+x** or **!roll xdx-x** | roll the specified number of a dice with an optional +/- modifier
+**!total xdx** | shows the total of a given dice roll
+**!rollstats -og** or **!rollstats -dl** | rolls stats for dnd chars
 **!card cardname** | display the image of the requested card
 **!rulings cardname** | display all available rulings for the requested card and their source
 **!legality cardname** | display the legality of the requested card for the standard, modern & commander formats
